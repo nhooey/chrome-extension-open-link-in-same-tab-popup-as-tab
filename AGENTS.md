@@ -1,8 +1,7 @@
 # Open link in same tab, pop-up as tab
 
-A Chrome extension (Manifest V2), downloaded from the Chrome Web Store
-through Extpose, that opens pop-up windows as tabs and makes links open
-in the same tab instead of a new one.
+A Chrome extension (Manifest V2) that opens pop-up windows as tabs and
+makes links open in the same tab instead of a new one.
 
 - `manifest.json`: the extension's manifest.
 - `UseOneWindow.js`: the background script that turns pop-up windows
