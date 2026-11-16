@@ -30,5 +30,31 @@
         # update-flake trio's `fmt`; keep only the skills commands.
         includeStandardCommands = false;
       };
+
+      perSystem =
+        { pkgs, lib, ... }:
+        {
+          # The extension's tests, run by Node's built-in runner: no npm
+          # packages, so nothing to fetch.
+          checks.tests =
+            pkgs.runCommand "tests"
+              {
+                nativeBuildInputs = [ pkgs.nodejs ];
+                src = lib.fileset.toSource {
+                  root = ./.;
+                  fileset = lib.fileset.unions [
+                    (lib.fileset.fileFilter (
+                      file: lib.any file.hasExt [ "js" "json" "html" "png" ]
+                    ) ./.)
+                    ./test
+                  ];
+                };
+              }
+              ''
+                cd "$src"
+                node --test 'test/*.test.js'
+                touch "$out"
+              '';
+        };
     };
 }
