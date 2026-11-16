@@ -34,6 +34,20 @@
       perSystem =
         { pkgs, lib, ... }:
         {
+          # The project's commands live in one tool, `tools/extension.js`,
+          # run by the dev shell's Node.
+          devshells.default = {
+            packages = [ pkgs.nodejs ];
+            commands = [
+              {
+                category = "dev";
+                name = "extension";
+                help = "Run the extension's tests or nix flake check (extension --help)";
+                command = ''exec ${lib.getExe pkgs.nodejs} "$PRJ_ROOT/tools/extension.js" "$@"'';
+              }
+            ];
+          };
+
           # The extension's tests, run by Node's built-in runner: no npm
           # packages, so nothing to fetch.
           checks.tests =
