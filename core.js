@@ -3,6 +3,8 @@
 // the scripts that use it; Node's tests load it through module.exports.
 
 // The target a link should get: "_blank" links open in the same tab.
+// "_top" rather than "_self", so a link inside a frame replaces the whole
+// page in the tab instead of loading inside the frame.
 function retargetedTarget(target) {
   return target == "_blank" ? "_top" : target;
 }
