@@ -1,14 +1,10 @@
-// Saves options to chrome.storage
-function save_options(reload) {
-  var t1pop = document.getElementById('cb_t1pop').checked;
-  var t1foc = document.getElementById('cb_t1foc').checked;
-  var t1tab = document.getElementById('cb_t1tab').checked;
+// Saves the one option the user changed to chrome.storage, so storage
+// holds only the user's choices and later defaults still reach the rest.
+function save_option(key, reload) {
+  var items = {};
+  items[key] = document.getElementById('cb_' + key).checked;
 
-  chrome.storage.sync.set({
-    t1pop: t1pop,
-    t1foc: t1foc,
-    t1tab: t1tab
-  }, function () {
+  chrome.storage.sync.set(items, function () {
     console.log('Options saved');
     if (reload == true) {
       chrome.runtime.reload();
@@ -29,6 +25,6 @@ window.onload = function restore_options() {
 
 ['t1pop', 't1foc', 't1tab'].forEach(function (key) {
   document.getElementById('cb_' + key).addEventListener('click', function () {
-    save_options(optionNeedsReload(key));
+    save_option(key, optionNeedsReload(key));
   });
 });

@@ -131,23 +131,23 @@ test("options pop-up shows the stored options, defaulting to on", async () => {
   assert.equal(elements.cb_t1tab.checked, true);
 });
 
-test("options pop-up saves every option and reloads for t1pop", async () => {
+test("options pop-up saves only t1pop and reloads", async () => {
   const { elements, saved, reloads } = await openPopup({});
   elements.cb_t1pop.click();
-  assert.deepEqual(saved, [{ t1pop: false, t1foc: true, t1tab: true }]);
+  assert.deepEqual(saved, [{ t1pop: false }]);
   assert.equal(reloads.length, 1);
 });
 
-test("options pop-up reloads for t1foc", async () => {
+test("options pop-up saves only t1foc and reloads", async () => {
   const { elements, saved, reloads } = await openPopup({});
   elements.cb_t1foc.click();
-  assert.deepEqual(saved, [{ t1pop: true, t1foc: false, t1tab: true }]);
+  assert.deepEqual(saved, [{ t1foc: false }]);
   assert.equal(reloads.length, 1);
 });
 
-test("options pop-up saves t1tab without reloading", async () => {
+test("options pop-up saves only t1tab, without reloading", async () => {
   const { elements, saved, reloads } = await openPopup({});
   elements.cb_t1tab.click();
-  assert.deepEqual(saved, [{ t1pop: true, t1foc: true, t1tab: false }]);
+  assert.deepEqual(saved, [{ t1tab: false }]);
   assert.equal(reloads.length, 0);
 });
