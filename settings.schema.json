@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Open link in same tab, pop-up as tab: settings",
+  "description": "The settings in chrome.storage.sync. defaults.json holds every one at its default; storage holds only what the user changed, merged over it key by key.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "t1pop": {
+      "type": "boolean",
+      "description": "Move a new pop-up window's tab into the main window as a tab. Other extensions' pop-ups stay as windows. Read at start-up, so changing it reloads the extension."
+    },
+    "t1foc": {
+      "type": "boolean",
+      "description": "Give a tab moved from a pop-up window focus. Read at start-up, so changing it reloads the extension."
+    },
+    "t1tab": {
+      "type": "boolean",
+      "description": "Open target=\"_blank\" links in the current tab instead of a new one. Takes effect on pages loaded after the change."
+    }
+  }
+}

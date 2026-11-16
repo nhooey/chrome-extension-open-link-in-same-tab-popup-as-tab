@@ -12,9 +12,15 @@ makes links open in the same tab instead of a new one.
   `chrome.storage.sync`.
 - `core.js`: the pure decisions the three scripts share, loaded before
   each of them.
+- `defaults.json`: every setting at its default, shipped with the
+  extension. `settings.schema.json` documents each setting and its type.
+  `settings.js` loads the defaults, merges the user's
+  `chrome.storage.sync` values over them and refuses an unknown key; no
+  script carries a default of its own.
 - `test/`: Node tests. `core.test.js` covers `core.js`; `scripts.test.js`
   runs the real scripts against the fake `chrome` API and DOM in
-  `test/support/extension.js`; `manifest.test.js` checks the load order.
+  `test/support/extension.js`; `manifest.test.js` checks the load order; `settings.test.js` checks
+  the defaults file against the schema and the merge.
 
 ## Build and test
 

@@ -16,22 +16,50 @@ function manifest() {
   return JSON.parse(readRepoFile("manifest.json"));
 }
 
+// Runs files in one fresh context with globals, plus fetch for the
+// extension's own files.
 function runScripts(files, globals) {
-  const context = vm.createContext(globals);
+  const context = vm.createContext({ fetch: fakeFetch, ...globals });
   for (const file of files) {
     vm.runInContext(readRepoFile(file), context, { filename: file });
   }
   return context;
 }
 
-// chrome.storage.sync backed by a plain object, with get's defaults.
+// Chrome's settled state: every pending fetch, promise and storage
+// callback has run, so a test can look at what the scripts did.
+function settle() {
+  return new Promise((resolve) => setImmediate(resolve));
+}
+
+const extensionOrigin = "chrome-extension://fake-extension-id/";
+
+// chrome.runtime's URL for a file in the extension.
+function getURL(file) {
+  return extensionOrigin + file;
+}
+
+// fetch for the extension's own files, served from the repository.
+function fakeFetch(url) {
+  if (!url.startsWith(extensionOrigin)) {
+    return Promise.reject(new Error(`unexpected fetch of ${url}`));
+  }
+  const body = readRepoFile(url.slice(extensionOrigin.length));
+  return Promise.resolve({ json: () => Promise.resolve(JSON.parse(body)) });
+}
+
+// chrome.storage.sync backed by a plain object. get(null) returns every
+// stored key, as Chrome's does; the scripts ask for nothing else.
 function fakeStorage(stored) {
   const saved = [];
   return {
     saved,
     sync: {
-      get(defaults, callback) {
-        callback({ ...defaults, ...stored });
+      get(keys, callback) {
+        if (keys !== null) {
+          throw new Error("the scripts read storage only through get(null)");
+        }
+        callback({ ...stored });
       },
       set(items, callback) {
         saved.push({ ...items }); // copy out of the vm realm
@@ -50,6 +78,7 @@ function fakeBrowser(windows, stored) {
   const updates = [];
   const byId = (id) => windows.find((w) => w.id === id);
   const chrome = {
+    runtime: { getURL },
     storage: fakeStorage(stored),
     windows: {
       getCurrent(_options, callback) {
@@ -107,6 +136,8 @@ module.exports = {
   manifest,
   readRepoFile,
   runScripts,
+  settle,
+  getURL,
   fakeStorage,
   fakeBrowser,
   fakeAnchor,

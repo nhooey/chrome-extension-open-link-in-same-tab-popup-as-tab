@@ -2,6 +2,7 @@
   "background": {
     "scripts": [
       "core.js",
+      "settings.js",
       "UseOneWindow.js"
     ]
   },
@@ -14,6 +15,7 @@
     {
       "js": [
         "core.js",
+        "settings.js",
         "OpenInTheSameTab.js"
       ],
       "matches": [
@@ -33,6 +35,10 @@
   "permissions": [
     "tabs",
     "storage"
+  ],
+  "web_accessible_resources": [
+    "defaults.json",
+    "settings.schema.json"
   ],
   "update_url": "https://clients2.google.com/service/update2/crx",
   "version": "2.1"

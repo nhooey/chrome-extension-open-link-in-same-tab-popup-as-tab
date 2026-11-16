@@ -22,16 +22,25 @@ test("every file the manifest names exists", () => {
   }
 });
 
-test("core.js loads before the background and content scripts", () => {
+test("core.js and settings.js load before the background and content scripts", () => {
   const m = manifest();
-  assert.deepEqual(m.background.scripts, ["core.js", "UseOneWindow.js"]);
+  assert.deepEqual(m.background.scripts, ["core.js", "settings.js", "UseOneWindow.js"]);
   for (const c of m.content_scripts) {
-    assert.equal(c.js[0], "core.js");
+    assert.deepEqual(c.js.slice(0, 2), ["core.js", "settings.js"]);
   }
 });
 
-test("popup.html loads core.js before popup.js", () => {
+test("popup.html loads core.js and settings.js before popup.js", () => {
   const scripts = [...readRepoFile("popup.html").matchAll(/<script src="([^"]+)"/g)]
     .map((match) => match[1]);
-  assert.deepEqual(scripts, ["core.js", "popup.js"]);
+  assert.deepEqual(scripts, ["core.js", "settings.js", "popup.js"]);
+});
+
+test("content scripts may fetch the settings files", () => {
+  // A content script fetches as the page does, so Chrome serves it only
+  // the extension's web-accessible files.
+  for (const file of ["defaults.json", "settings.schema.json"]) {
+    assert.ok(fs.existsSync(path.join(root, file)), `${file} is missing`);
+    assert.ok(manifest().web_accessible_resources.includes(file), file);
+  }
 });
