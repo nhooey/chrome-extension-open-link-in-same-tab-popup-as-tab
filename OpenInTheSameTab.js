@@ -8,8 +8,9 @@ chrome.storage.sync.get({
   if (t1tab == true) {
     var a = document.getElementsByTagName("a");
     for (i = 0; i < a.length; i++) {
-      if (a[i].target == "_blank" /* aggressive mode goes here */) {
-        a[i].target = "_top" /* _self vs _top */
+      var target = retargetedTarget(a[i].target);
+      if (target != a[i].target) {
+        a[i].target = target;
       }
     }
   }

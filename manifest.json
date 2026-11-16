@@ -1,6 +1,7 @@
 {
   "background": {
     "scripts": [
+      "core.js",
       "UseOneWindow.js"
     ]
   },
@@ -12,6 +13,7 @@
   "content_scripts": [
     {
       "js": [
+        "core.js",
         "OpenInTheSameTab.js"
       ],
       "matches": [

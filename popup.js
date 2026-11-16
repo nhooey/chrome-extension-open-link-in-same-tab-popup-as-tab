@@ -30,14 +30,10 @@ window.onload = function restore_options() {
     document.getElementById('cb_t1tab').checked = items.t1tab;
     console.log('Options restored');
   });
-}
+};
 
-document.getElementById('cb_t1pop').addEventListener('click', function () {
-  save_options(true);
-});
-document.getElementById('cb_t1foc').addEventListener('click', function () {
-  save_options(true);
-});
-document.getElementById('cb_t1tab').addEventListener('click', function () {
-  save_options(false);
+['t1pop', 't1foc', 't1tab'].forEach(function (key) {
+  document.getElementById('cb_' + key).addEventListener('click', function () {
+    save_options(optionNeedsReload(key));
+  });
 });
