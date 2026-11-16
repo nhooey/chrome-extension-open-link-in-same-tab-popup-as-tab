@@ -19,15 +19,23 @@ makes links open in the same tab instead of a new one.
   script carries a default of its own.
 - `test/`: Node tests. `core.test.js` covers `core.js`; `scripts.test.js`
   runs the real scripts against the fake `chrome` API and DOM in
-  `test/support/extension.js`; `manifest.test.js` checks the load order; `settings.test.js` checks
-  the defaults file against the schema and the merge.
+  `test/support/extension.js`; `manifest.test.js` checks the load
+  order; `settings.test.js` checks the defaults file against the schema
+  and the merge.
+- `tools/extension.js`: the `extension` command in the dev shell.
 
 ## Build and test
 
-There is no build step. `nix flake check` runs the tests; with Node on
-the path, `node --test 'test/*.test.js'` runs them directly. To try the
-extension in Chrome, load the directory as an unpacked extension at
-`chrome://extensions` with Developer mode on.
-
-`nix develop` installs the project's agent skills into
+There is no build step. `nix develop` puts the project's commands on
+the `PATH`, listed by `menu`, and installs its agent skills into
 `.agents/skills/`.
+
+- `extension test`: runs the Node tests; `--only <text>` narrows them
+  to the matching files.
+- `extension check`: runs `nix flake check`, which runs the same tests
+  in Nix.
+- `extension --help`: lists the commands and their options.
+
+The tool is `tools/extension.js`; `test/tools.test.js` covers its
+argument parsing. To try the extension in Chrome, load the directory as
+an unpacked extension at `chrome://extensions` with Developer mode on.
