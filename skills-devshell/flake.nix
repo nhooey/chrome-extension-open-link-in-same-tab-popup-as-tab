@@ -11,19 +11,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Skill sources, the same repos `github:nhooey/skillspkgs` aggregates.
-    # They follow `nixpkgs` but not `agent-skill-flake`, so each keeps its own
-    # compatible builder.
-    coding-agent-skills = {
-      url = "github:nhooey/coding-agent-skills";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    git-skills = {
-      url = "github:nhooey/git-skills";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    shell-skills = {
-      url = "github:nhooey/shell-skills";
+    # The one skill source: skillspkgs' combination for this repository's
+    # family, browser extensions and game mods.
+    skillspkgs-combinations = {
+      url = "github:nhooey/skillspkgs?dir=sources/combinations";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -39,19 +30,9 @@
       systems = import inputs.systems;
       name = "chrome-extension-open-link-in-same-tab-popup-as-tab-devshell";
       sources = [
-        # Commits, branches and pull requests.
-        { source = inputs.git-skills; }
-        # Safe shell commands: named deletes, PIDs, no machine-wide changes.
-        { source = inputs.shell-skills; }
-        # Headless runs in a checkout, a tidy scratchpad, and plans as a graph.
-        {
-          source = inputs.coding-agent-skills;
-          skills = [
-            "coding-agent-headless-in-checkout"
-            "coding-agent-plans-as-graph"
-            "coding-agent-scratchpad-scripts"
-          ];
-        }
+        # The browser-extensions-and-game-mods family's skills. The family is
+        # all JavaScript, so this repository adds no skills of its own.
+        { source = inputs.skillspkgs-combinations.combinations.browser-extensions-and-game-mods; }
       ];
     };
 }
