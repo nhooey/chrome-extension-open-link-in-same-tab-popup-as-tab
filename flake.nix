@@ -26,8 +26,9 @@
 
       agent-skill-flake.devshellSkills = {
         name = "chrome-extension-open-link-in-same-tab-popup-as-tab";
-        # No formatter is configured, so leave out the check / fmt /
-        # update-flake trio's `fmt`; keep only the skills commands.
+        # No formatter is configured, so leave out the whole check / fmt /
+        # update-flake trio, not only its `fmt`: the module adds just its
+        # two skills commands. `extension check` runs nix flake check.
         includeStandardCommands = false;
       };
 
